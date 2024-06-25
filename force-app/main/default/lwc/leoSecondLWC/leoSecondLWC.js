@@ -12,13 +12,16 @@ const columns = [
     }
 ];
 
-export default class LeoThirdLWC extends LightningElement {
+export default class LeoSecondLWC extends LightningElement {
     data = [];
 
     columns = columns;
 
     connectedCallback(){
-        const data = getOrdersByAccountId();
-        this.data = data;
+        const data = getOrdersByAccountId()
+        .then(result => {
+            this.data = result;
+            console.log(this.data);
+        })
     }
 }
