@@ -1,27 +1,40 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import getOrdersByAccountId from '@salesforce/apex/LeoThirdApex.getOrdersByAccountId';
 
-const columns = [
-    { label: 'Id', fieldName: 'Id' 
-    },
-
-    { label: 'Date Created', fieldName: 'CreatedDate' 
-    },
-
-    { label: 'Total Amount', fieldName: 'TotalAmount' 
-    }
-];
-
 export default class LeoSecondLWC extends LightningElement {
-    data = [];
-
-    columns = columns;
+    @track data = [];
+    @track columns = [
+        { label: 'Id', fieldName: 'Id' },
+        { 
+            label: 'Date Created', 
+            fieldName: 'CreatedDate', 
+            type: 'date', 
+            typeAttributes: { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit' 
+            } 
+        },
+        { 
+            label: 'Total Amount', 
+            fieldName: 'TotalAmount', 
+            type: 'currency', 
+            typeAttributes: { 
+                currencyCode: 'USD', 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            } 
+        }
+    ];
 
     connectedCallback(){
-        const data = getOrdersByAccountId()
+        getOrdersByAccountId()
         .then(result => {
             this.data = result;
-            console.log(this.data);
+            console.log('data: ', this.data[0]);
         })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
     }
 }
